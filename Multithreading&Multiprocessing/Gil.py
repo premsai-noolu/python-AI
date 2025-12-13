@@ -1,0 +1,31 @@
+''' GIL is a mutex (lock) in CPython that allows only ONE thread to execute Python bytecode at a time, even on a multi-core CPU.
+
+👉 This means:
+
+Multiple threads can exist
+
+But only one thread runs Python code at any moment'''
+
+
+
+import threading
+import time
+
+def brew_chai():
+    print(f"{threading.current_thread().name} started brewing...")
+    count = 0
+    for _ in range(100_000_000):
+        count += 1
+    print(f"{threading.current_thread().name} finished brewing...")
+
+thread1 =threading.Thread(target=brew_chai, name="Barista-1")
+thread2 = threading.Thread(target=brew_chai, name="Barista-2")
+
+start = time.time()
+thread1.start()
+thread2.start()
+thread1.join()
+thread2.join()
+end = time.time()
+
+print(f"total time taken: {end - start:.2f} seconds")
